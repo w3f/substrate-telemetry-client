@@ -1,0 +1,43 @@
+{
+  "name": "@w3f/substrate-telemetry-client",
+  "version": "0.1.0",
+  "description": "Client library for Substrate Telemetry",
+  "author": "W3F SecOps Team <devops@web3.foundation>",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "yarn tsc",
+    "prepare": "yarn build",
+    "basic": "yarn ts-node examples/basic.ts",
+    "detailed": "yarn ts-node examples/detailed.ts",
+    "lint": "eslint \"src/**/*.ts\" \"examples/**/*.ts\"",
+    "lint:fix": "eslint \"src/**/*.ts\" \"examples/**/*.ts\" --fix"
+  },
+  "keywords": [
+    "substrate",
+    "telemetry",
+    "polkadot",
+    "kusama"
+  ],
+  "dependencies": {
+    "axios": "^1.7.9",
+    "ws": "^8.18.0",
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.12.0",
+    "@types/ws": "^8.5.14",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3",
+    "@typescript-eslint/eslint-plugin": "^8.22.0",
+    "@typescript-eslint/parser": "^8.22.0",
+    "eslint": "^8.54.0"
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+}
