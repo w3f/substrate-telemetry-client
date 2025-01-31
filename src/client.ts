@@ -1,8 +1,7 @@
 import WebSocket from 'ws';
 import type { Data } from 'ws';
-import axios, { AxiosInstance } from 'axios';
 import { ACTIONS, DEFAULT_WS_URL, FEED_VERSION } from './constants';
-import { NodeInfo, GenesisHash, ChainStats, IpInfoConfig, TelemetryConfig, NodeLocation } from './types';
+import { NodeInfo, GenesisHash, ChainStats, TelemetryConfig, NodeLocation } from './types';
 
 type MessageHandler = (nodes: NodeInfo[]) => void;
 
@@ -20,27 +19,17 @@ export class TelemetryClient {
   private readonly url: string;
   private readonly autoReconnect: boolean;
   private readonly maxReconnectAttempts: number;
-  private readonly ipCache = new Map<string, Promise<NodeLocation>>();
-  private readonly ipCacheTimeout: number;
-  private readonly httpClient: AxiosInstance | undefined;
-
   /**
    * Creates a new TelemetryClient instance
    * @param config - Configuration options for the client
    * @param config.url - WebSocket URL for telemetry service
    * @param config.autoReconnect - Whether to automatically reconnect on disconnect
    * @param config.maxReconnectAttempts - Maximum number of reconnection attempts
-   * @param config.ipInfo - Configuration for IP geolocation service
    */
   constructor(private readonly config: TelemetryConfig = {}) {
     this.url = config.url ?? DEFAULT_WS_URL;
     this.autoReconnect = config.autoReconnect ?? true;
     this.maxReconnectAttempts = config.maxReconnectAttempts ?? 5;
-    this.ipCacheTimeout = config.ipInfo?.cacheTimeout ?? 24 * 60 * 60 * 1000;
-
-    if (config.ipInfo) {
-      this.httpClient = this.initializeHttpClient(config.ipInfo);
-    }
   }
 
   /**
@@ -146,66 +135,6 @@ export class TelemetryClient {
     }
   }
 
-  private initializeHttpClient(config: IpInfoConfig): AxiosInstance {
-    const client = axios.create({
-      baseURL: 'https://ipinfo.io',
-      timeout: config.requestTimeout || 5000,
-      headers: {
-        'Authorization': `Bearer ${config.token}`
-      }
-    });
-
-    client.interceptors.response.use(
-      response => response,
-      error => {
-        if (error.response) {
-          console.error(
-            `IP info request failed:`,
-            `Status: ${error.response.status}`,
-            `Data: ${JSON.stringify(error.response.data)}`
-          );
-        } else if (error.request) {
-          console.error(`No response received:`, error.message);
-        } else {
-          console.error(`Request setup failed:`, error.message);
-        }
-        throw error;
-      }
-    );
-
-    return client;
-  }
-
-  private async fetchLocationData(ip: string): Promise<NodeLocation> {
-    if (!this.httpClient) {
-      return {};
-    }
-
-    const cached = this.ipCache.get(ip);
-    if (cached) return cached;
-
-    const locationPromise = this.httpClient
-      .get(`/${ip}`)
-      .then(({ data }) => ({
-        latitude: Number(data.loc?.split(',')[0]),
-        longitude: Number(data.loc?.split(',')[1]),
-        city: data.city,
-        provider: data.org
-      }))
-      .catch(err => {
-        console.error(`Failed to fetch location for IP ${ip}:`, err.response?.data || err.message);
-        return {};
-      });
-
-    this.ipCache.set(ip, locationPromise);
-    
-    setTimeout(() => {
-      this.ipCache.delete(ip);
-    }, this.ipCacheTimeout);
-
-    return locationPromise;
-  }
-
   private handleMessage = async (data: Data) => {
     const message = data.toString();
     const parsed = JSON.parse(message) as [number, any];
@@ -299,16 +228,6 @@ export class TelemetryClient {
           startupTime
         };
         
-        // If IpInfo is configured, enrich location with additional data
-        // TODO: might be done in a non-blocking way?
-        if (ip && this.config.ipInfo) {
-          const locationData = await this.fetchLocationData(ip);
-          node.location = {
-            ...node.location,
-            ...locationData
-          };
-        }
-
         this.nodes.set(id, node);
 
         break;
