@@ -1,4 +1,3 @@
-// Basic types
 export type GenesisHash = string;
 export type NodeId = number;
 export type NodeName = string;
@@ -19,17 +18,10 @@ export interface NodeBenchmarks {
   cpuVendor?: string;
 }
 
-export interface IpInfoConfig {
-  token: string;
-  cacheTimeout?: number;
-  requestTimeout?: number;
-}
-
 export interface TelemetryConfig {
   url?: string;
   autoReconnect?: boolean;
   maxReconnectAttempts?: number;
-  ipInfo?: IpInfoConfig;
 }
 
 export interface NodeSystemInfo {
@@ -57,7 +49,6 @@ export interface NodeLocation {
   latitude?: number;
   longitude?: number;
   city?: string;
-  provider?: string;   // Available only with IPInfo
 }
 
 export interface NodeBlock {

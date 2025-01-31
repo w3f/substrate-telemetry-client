@@ -1,7 +1,4 @@
 import { TelemetryClient, CHAIN_GENESIS } from '../src';
-import * as dotenv from 'dotenv';
-
-dotenv.config();
 
 function formatBytes(bytes: number): string {
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
@@ -11,19 +8,7 @@ function formatBytes(bytes: number): string {
 }
 
 async function main() {
-  let client: TelemetryClient;
-  if (process.env.IPINFO_TOKEN) {
-    client = new TelemetryClient({
-      // url: 'http://10.0.2.2:8000/feed/',
-      ipInfo: {
-        token: process.env.IPINFO_TOKEN,
-        cacheTimeout: 12 * 60 * 60 * 1000, // 12 hours
-        requestTimeout: 3000, // 3 seconds
-      }
-    });
-  } else {
-    client = new TelemetryClient()
-  }
+  const client = new TelemetryClient();
   
   await client.connect();
   
@@ -91,7 +76,6 @@ async function main() {
         console.log('\n=== Location ===');
         console.log(`City: ${node.location.city}`);
         console.log(`Coordinates: ${node.location.latitude}, ${node.location.longitude}`);
-        console.log(`Provider: ${node.location.provider}`);
       }
 
       if (node.block) {

@@ -7,7 +7,7 @@ async function main() {
 
   await new Promise(resolve => setTimeout(resolve, 3000));
   
-  const nodeNames = ['bulletproof'];
+  const nodeNames = ['kusama'];
   const nodes = client.getNodesFiltered(node => nodeNames.includes(node.name))
   if (nodes.length > 0) {
     const node = nodes[0];

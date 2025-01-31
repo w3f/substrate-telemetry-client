@@ -33,19 +33,6 @@ const nodeNames = ['Alice', 'Bob', 'Charlie'];
 const specificNodes = client.getNodesFiltered(node => nodeNames.includes(node.name));
 ```
 
-## IP Geolocation
-
-The client can optionally enhance node data with geolocation information from ipinfo.io when node IP is available in the feed:
-
-```typescript
-const client = new TelemetryClient({
-  ipInfo: {
-    token: 'your-ipinfo-token',
-    cacheTimeout: 12 * 60 * 60 * 1000 // 12 hours
-  }
-});
-```
-
 ## API Reference
 
 ### TelemetryClient
@@ -56,11 +43,6 @@ interface TelemetryConfig {
   url?: string;                    // Telemetry WebSocket URL
   autoReconnect?: boolean;         // Auto reconnect on disconnect
   maxReconnectAttempts?: number;   // Max reconnection attempts
-  ipInfo?: {
-    token: string;                 // ipinfo.io API token
-    cacheTimeout?: number;         // Cache duration in ms
-    requestTimeout?: number;       // Request timeout in ms
-  };
 }
 ```
 
@@ -98,7 +80,7 @@ yarn detailed
 
 You can find example code in:
 - `examples/basic.ts` - Simple connection and node information display
-- `examples/detailed.ts` - Detailed output, IPInfo usage example
+- `examples/detailed.ts` - Detailed output with node information
 
 ## Issues
 
