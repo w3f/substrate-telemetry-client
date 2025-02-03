@@ -37,38 +37,40 @@ async function main() {
         console.log(`IP: ${node.networkInfo.ip}`);
       }
       
-      console.log('\n=== System Info ===');
-      console.log(`CPU: ${node.systemInfo.cpu}`);
-      console.log(`Memory: ${formatBytes(node.systemInfo.memory)}`);
-      console.log(`Cores: ${node.systemInfo.coreCount}`);
-      console.log(`Virtual Machine: ${node.systemInfo.isVirtualMachine ? 'Yes' : 'No'}`);
-      if (node.systemInfo.kernel) {
-        console.log(`Kernel: ${node.systemInfo.kernel}`);
-      }
-      if (node.systemInfo.distribution) {
-        console.log(`Distribution: ${node.systemInfo.distribution}`);
-      }
-      console.log(`Target OS: ${node.systemInfo.targetOS}`);
-      console.log(`Target Arch: ${node.systemInfo.targetArch}`);
-      console.log(`Target Env: ${node.systemInfo.targetEnv}`);
+      if (node.systemInfo) {
+        console.log('\n=== System Info ===');
+        console.log(`CPU: ${node.systemInfo.cpu}`);
+        console.log(`Memory: ${formatBytes(node.systemInfo.memory)}`);
+        console.log(`Cores: ${node.systemInfo.coreCount}`);
+        console.log(`Virtual Machine: ${node.systemInfo.isVirtualMachine ? 'Yes' : 'No'}`);
+        if (node.systemInfo.kernel) {
+          console.log(`Kernel: ${node.systemInfo.kernel}`);
+        }
+        if (node.systemInfo.distribution) {
+          console.log(`Distribution: ${node.systemInfo.distribution}`);
+        }
+        console.log(`Target OS: ${node.systemInfo.targetOS}`);
+        console.log(`Target Arch: ${node.systemInfo.targetArch}`);
+        console.log(`Target Env: ${node.systemInfo.targetEnv}`);
 
-      if (node.systemInfo.benchmarks) {
-        console.log('\n=== Benchmarks ===');
-        const b = node.systemInfo.benchmarks;
-        if (b.cpuHashrateScore) {
-          console.log(`CPU Hashrate: ${b.cpuHashrateScore[0]}${b.cpuHashrateScore[1] ? '/' + b.cpuHashrateScore[1] : ''}`);
-        }
-        if (b.memoryMemcpyScore) {
-          console.log(`Memory Memcpy: ${b.memoryMemcpyScore[0]}${b.memoryMemcpyScore[1] ? '/' + b.memoryMemcpyScore[1] : ''}`);
-        }
-        if (b.diskSequentialWriteScore) {
-          console.log(`Disk Sequential Write: ${b.diskSequentialWriteScore[0]}${b.diskSequentialWriteScore[1] ? '/' + b.diskSequentialWriteScore[1] : ''}`);
-        }
-        if (b.diskRandomWriteScore) {
-          console.log(`Disk Random Write: ${b.diskRandomWriteScore[0]}${b.diskRandomWriteScore[1] ? '/' + b.diskRandomWriteScore[1] : ''}`);
-        }
-        if (b.cpuVendor) {
-          console.log(`CPU Vendor: ${b.cpuVendor}`);
+        if (node.systemInfo.benchmarks) {
+          console.log('\n=== Benchmarks ===');
+          const b = node.systemInfo.benchmarks;
+          if (b.cpuHashrateScore) {
+            console.log(`CPU Hashrate: ${b.cpuHashrateScore[0]}${b.cpuHashrateScore[1] ? '/' + b.cpuHashrateScore[1] : ''}`);
+          }
+          if (b.memoryMemcpyScore) {
+            console.log(`Memory Memcpy: ${b.memoryMemcpyScore[0]}${b.memoryMemcpyScore[1] ? '/' + b.memoryMemcpyScore[1] : ''}`);
+          }
+          if (b.diskSequentialWriteScore) {
+            console.log(`Disk Sequential Write: ${b.diskSequentialWriteScore[0]}${b.diskSequentialWriteScore[1] ? '/' + b.diskSequentialWriteScore[1] : ''}`);
+          }
+          if (b.diskRandomWriteScore) {
+            console.log(`Disk Random Write: ${b.diskRandomWriteScore[0]}${b.diskRandomWriteScore[1] ? '/' + b.diskRandomWriteScore[1] : ''}`);
+          }
+          if (b.cpuVendor) {
+            console.log(`CPU Vendor: ${b.cpuVendor}`);
+          }
         }
       }
 
