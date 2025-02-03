@@ -188,7 +188,7 @@ export class TelemetryClient {
             peerId: networkId || undefined,
             ip: ip || undefined
           },
-          systemInfo: {
+          systemInfo: sysInfo && {
             cpu: sysInfo.cpu,
             memory: sysInfo.memory,
             coreCount: sysInfo.core_count,
@@ -198,13 +198,13 @@ export class TelemetryClient {
             targetOS,
             targetArch,
             targetEnv,
-            benchmarks: hwbench ? {
+            benchmarks: hwbench && {
               cpuHashrateScore: hwbench.cpu_hashrate_score,
               memoryMemcpyScore: hwbench.memory_memcpy_score,
               diskSequentialWriteScore: hwbench.disk_sequential_write_score,
               diskRandomWriteScore: hwbench.disk_random_write_score,
               cpuVendor: hwbench.cpu_vendor
-            } : undefined
+            },
           },
           transactionCount: nodeStats[1],
           io: nodeIO ? {

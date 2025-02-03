@@ -88,7 +88,7 @@ export interface NodeInfo {
   version: NodeVersion;
   validator?: string;
   networkInfo: NodeNetworkInfo;
-  systemInfo: NodeSystemInfo;
+  systemInfo?: NodeSystemInfo;
   location?: NodeLocation;
   block?: NodeBlock;
   transactionCount?: number;
@@ -116,7 +116,7 @@ export type NodeDetails = [
     linux_kernel?: string;
     linux_distro?: string;
     is_virtual_machine: boolean;
-  },
+  } | null,
   {                    // 10: hardware benchmarks
     cpu_hashrate_score?: [number, number | null];
     memory_memcpy_score?: [number, number | null];
