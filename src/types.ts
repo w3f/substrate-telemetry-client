@@ -18,10 +18,20 @@ export interface NodeBenchmarks {
   cpuVendor?: string;
 }
 
+export interface Logger {
+  log(message: string, ...args: unknown[]): void;
+  error(message: string, ...args: unknown[]): void;
+  warn(message: string, ...args: unknown[]): void;
+  debug(message: string, ...args: unknown[]): void;
+  verbose(message: string, ...args: unknown[]): void;
+  fatal(message: string, ...args: unknown[]): void;
+}
+
 export interface TelemetryConfig {
   url?: string;
   autoReconnect?: boolean;
   maxReconnectAttempts?: number;
+  logger?: Logger;
 }
 
 export interface NodeSystemInfo {
@@ -55,6 +65,8 @@ export interface NodeBlock {
   height: number;
   hash: string;
   propagationTime?: number;
+  finalized?: number;
+  finalizedHash?: string;
 }
 
 // Rankings for chain statistics
@@ -96,6 +108,7 @@ export interface NodeInfo {
   io?: NodeIO;
   hardware?: NodeHardware;
   stale?: boolean;
+  updatedAt: string;  // ISO UTC timestamp
 }
 
 // Message types for parsing incoming data
@@ -147,5 +160,10 @@ export type BlockDetails = [
 
 export interface FeedMessage {
   action: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload: any;
+}
+
+export interface ActionCounts {
+  [key: string]: number;  // Maps action name to count
 }

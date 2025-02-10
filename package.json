@@ -1,6 +1,6 @@
 {
   "name": "@w3f/substrate-telemetry-client",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Client library for Substrate Telemetry",
   "author": "W3F SecOps Team <devops@web3.foundation>",
   "license": "MIT",
@@ -16,6 +16,7 @@
     "prepare": "yarn build",
     "basic": "yarn ts-node examples/basic.ts",
     "detailed": "yarn ts-node examples/detailed.ts",
+    "watch-node": "yarn ts-node examples/watch-node.ts",
     "lint": "eslint \"src/**/*.ts\" \"examples/**/*.ts\"",
     "lint:fix": "eslint \"src/**/*.ts\" \"examples/**/*.ts\" --fix"
   },
