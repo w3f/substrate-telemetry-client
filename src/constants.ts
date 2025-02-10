@@ -1,7 +1,11 @@
+// TODO: Implement multi-chain support. The following actions (AddedChain, RemovedChain,
+// SubscribedTo, UnsubscribedFrom) will be needed to track and switch between multiple 
+// chains. This will require extending the client to handle chain subscription and state.
+
 export const ACTIONS = {
   FeedVersion: 0x00,
-  BestBlock: 0x01,
-  BestFinalized: 0x02,
+  BestBlock: 0x01,      // Not needed: chain-wide block info, we track per-node state
+  BestFinalized: 0x02,  // Not needed: chain-wide finalized info, we track per-node state
   AddedNode: 0x03,
   RemovedNode: 0x04,
   LocatedNode: 0x05,
@@ -10,10 +14,10 @@ export const ACTIONS = {
   NodeStatsUpdate: 0x08,
   Hardware: 0x09,
   TimeSync: 0x0a,
-  AddedChain: 0x0b,
-  RemovedChain: 0x0c,
-  SubscribedTo: 0x0d,
-  UnsubscribedFrom: 0x0e,
+  AddedChain: 0x0b,        // TODO: multi-chain support
+  RemovedChain: 0x0c,      // TODO: multi-chain support
+  SubscribedTo: 0x0d,      // TODO: multi-chain support
+  UnsubscribedFrom: 0x0e,  // TODO: multi-chain support
   Pong: 0x0f,
   StaleNode: 0x14,        // 20
   NodeIOUpdate: 0x15,     // 21
