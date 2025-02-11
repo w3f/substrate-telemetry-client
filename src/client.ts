@@ -91,7 +91,7 @@ export class TelemetryClient {
           resolve();
         });
 
-        this.socket!.on('message', this.handleMessage);
+        this.socket!.on('message', this.handleRawMessage);
         this.socket!.on('close', this.handleDisconnect);
         this.socket!.on('error', (err) => {
           this.logger.error('WebSocket error:', err);
@@ -176,11 +176,8 @@ export class TelemetryClient {
     }
   }
 
-  private handleMessage = async (data: Data) => {
-    const message = data.toString();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const parsed = JSON.parse(message) as [number, any];
-    const [action, payload] = parsed;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private handleMessage(action: number, payload: any) {
     this.incrementActionCount(action);
     
     switch (action) {
@@ -371,6 +368,19 @@ export class TelemetryClient {
         this.chainStats = payload;
         break;
       }
+    }
+  }
+
+  private handleRawMessage = async (data: Data) => {
+    const message = data.toString();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const parsed = JSON.parse(message) as any[];
+    
+    // Ex.: [action1, payload1, action2, payload2, ...]
+    for (let i = 0; i < parsed.length; i += 2) {
+      const action = parsed[i] as number;
+      const payload = parsed[i + 1];
+      this.handleMessage(action, payload);
     }
 
     const nodes = Array.from(this.nodes.values());
