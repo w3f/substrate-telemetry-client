@@ -1,6 +1,6 @@
 {
   "name": "@w3f/substrate-telemetry-client",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Client library for Substrate Telemetry",
   "author": "W3F SecOps Team <devops@web3.foundation>",
   "license": "MIT",
