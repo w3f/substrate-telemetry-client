@@ -110,6 +110,7 @@ export class TelemetryClient {
    * @param chain - Genesis hash of the chain to subscribe to
    */
   public subscribe(chain: GenesisHash): void {
+    this.nodes.clear();
     this.subscribedChain = chain;
     if (this.socket?.readyState === WebSocket.OPEN) {
       this.socket.send(`subscribe:${chain}`);
@@ -195,7 +196,7 @@ export class TelemetryClient {
     
     switch (action) {
       case ACTIONS.FeedVersion: {
-        this.logger.log('Received FeedVersion:', payload);
+        this.logger.log(`Received FeedVersion: ${payload}`);
         if (payload !== FEED_VERSION) {
           this.disconnect();
           throw new Error(
@@ -411,8 +412,8 @@ export class TelemetryClient {
           `Last attempt to connect to ${this.url} failed.`
         );
       }
-
-      const delay = Math.min(1000 * Math.pow(2, this.reconnectAttempt), 10000);
+      // 30 sec should be enough for the server to restart and initialize
+      const delay = 30000;
       this.reconnectAttempt++;
       
       this.logger.log(
