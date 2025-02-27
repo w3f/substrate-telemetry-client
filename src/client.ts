@@ -4,7 +4,6 @@ import { ACTIONS, DEFAULT_WS_URL, FEED_VERSION } from './constants';
 import { NodeInfo, GenesisHash, ChainStats, TelemetryConfig, ActionCounts, Logger } from './types';
 
 type MessageHandler = (nodes: NodeInfo[]) => void;
-type DisconnectHandler = () => void;
 
 /**
  * Client for connecting to Substrate Telemetry service.
@@ -14,7 +13,6 @@ export class TelemetryClient {
   private socket?: WebSocket;
   private nodes = new Map<number, NodeInfo>();
   private messageHandlers = new Set<MessageHandler>();
-  private disconnectHandlers = new Set<DisconnectHandler>();
   private reconnectAttempt = 0;
   private subscribedChain: GenesisHash | null = null;
   private chainStats?: ChainStats;
@@ -128,16 +126,6 @@ export class TelemetryClient {
   }
 
   /**
-   * Registers a handler for disconnect events
-   * @param handler - Function to be called when the client disconnects
-   * @returns Function to unregister the handler
-   */
-  public onDisconnect(handler: DisconnectHandler): () => void {
-    this.disconnectHandlers.add(handler);
-    return () => this.disconnectHandlers.delete(handler);
-  }
-
-  /**
    * Returns all currently known nodes
    * @returns Array of node information
    */
@@ -184,7 +172,6 @@ export class TelemetryClient {
    * Disconnects from the telemetry service
    */
   public disconnect(): void {
-    this.disconnectHandlers.forEach(handler => handler());
     if (this.socket) {
       this.socket.close();
     }
@@ -403,7 +390,6 @@ export class TelemetryClient {
 
   private handleDisconnect = async () => {
     this.logger.log('Disconnected from telemetry');
-    this.disconnectHandlers.forEach(handler => handler());
     
     if (this.autoReconnect) {
       if (this.reconnectAttempt >= this.maxReconnectAttempts) {
